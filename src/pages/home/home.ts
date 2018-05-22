@@ -16,6 +16,7 @@ export class HomePage {
   private onResumeSubscription: Subscription;
   private onPauseSubscription: Subscription;
 
+  private scanningInProgress: boolean = false;
   private isInForeground: boolean = true;
 
 
@@ -44,6 +45,7 @@ export class HomePage {
 
   startScanningForBeacons() {
     this.platform.ready().then(() => {
+      this.scanningInProgress = true;
       evothings.eddystone.startScan((data) => {
 
         if (!this.isInForeground) {
@@ -67,6 +69,12 @@ export class HomePage {
         this.changeDetector.detectChanges();
       })
     });
+  }
+
+  stopScanningForBeacons() {
+    this.scanningInProgress = false;
+    evothings.eddystone.stopScan();
+    this.beaconData = new Map();
   }
 
   uint8ArrayToString(uint8Array) {

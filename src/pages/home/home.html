@@ -7,12 +7,13 @@
 </ion-header>
 
 <ion-content padding>
-  <button ion-button (click)="startScanningForBeacons()">Scan</button>
+  <button ion-button (click)="startScanningForBeacons()" [disabled]="scanningInProgress">Start Scan</button>
+  <button ion-button (click)="stopScanningForBeacons()" [disabled]="!scanningInProgress">Stop Scan</button>
 
   <div *ngFor="let beacon of getBeaconList()">
-    {{beacon.timestamp}}<br/>
-    {{beacon.distance}}<br/>
-    {{beacon.address}}
+    <b>Beacon Address</b>: {{beacon.address}}<br>
+    <b>Timestamp</b>: {{beacon.timestamp}}<br/>
+    <b>Distance</b>: {{beacon.distance}}<br/><br/>
   </div>
 
 </ion-content>
