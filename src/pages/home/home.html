@@ -11,6 +11,7 @@
   <button ion-button (click)="stopScanningForBeacons()" [disabled]="!scanningInProgress">Stop Scan</button>
 
   <div *ngFor="let beacon of getBeaconList()">
+    <b>Beacon Instance</b>: {{beacon.instanceId}}<br>
     <b>Beacon Address</b>: {{beacon.address}}<br>
     <b>Timestamp</b>: {{beacon.timestamp}}<br/>
     <b>Distance</b>: {{beacon.distance}}<br/><br/>

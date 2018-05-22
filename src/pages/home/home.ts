@@ -12,6 +12,10 @@ declare var cordova: any;
 })
 export class HomePage {
 
+  BLUEBERRY_BEACON = 'a0cee54c0b49';
+  MINT_BEACON = '48058592a6c9';
+  ICE_BEACON = '63243aedf681';
+
   beaconData: Map<string, any> = new Map();
 
   private onResumeSubscription: Subscription;
@@ -62,11 +66,11 @@ export class HomePage {
           }
         }
 
-
+        data.instanceId = this.uint8ArrayToString(data.bid);
         data.timestamp = Date.now();
         data.distance = evothings.eddystone.calculateAccuracy(data.txPower, data.rssi);
         data.voucherBeacon = this.isVoucherBeacon(data) && this.isInReach(data);
-         data.paintingBeacon = this.isPaintingBeacon(data) && this.isInReach(data);
+        data.paintingBeacon = this.isPaintingBeacon(data) && this.isInReach(data);
         this.beaconData[data.address] = data;
 
         this.changeDetector.detectChanges();
@@ -81,11 +85,11 @@ export class HomePage {
   }
 
   isVoucherBeacon(data): boolean {
-    return data.address.startsWith('A9067');
+    return data.instanceId === this.ICE_BEACON;
   }
 
   isPaintingBeacon(data): boolean {
-    return data.address.startsWith('92D4D');
+    return data.instanceId === this.BLUEBERRY_BEACON;
   }
 
   isInReach(data): boolean {
@@ -100,9 +104,9 @@ export class HomePage {
 
     var result = '';
     for (var i = 0; i < uint8Array.length; ++i) {
-      result += format(uint8Array[i]) + ' ';
+      result += format(uint8Array[i]);
     }
-    return result;
+    return result.trim();
   }
 
   showPaintingInfo() {
