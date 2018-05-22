@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {Platform} from 'ionic-angular';
 import {Subscription} from "rxjs/Subscription";
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 declare var evothings: any;
 declare var cordova: any;
@@ -20,7 +21,7 @@ export class HomePage {
   private isInForeground: boolean = true;
 
 
-  constructor(private platform: Platform, private changeDetector: ChangeDetectorRef) {
+  constructor(private platform: Platform, private changeDetector: ChangeDetectorRef, private iab: InAppBrowser) {
     this.onResumeSubscription = platform.resume.subscribe(() => {
       // do something meaningful when the app is put in the foreground
       this.isInForeground = true;
@@ -64,6 +65,8 @@ export class HomePage {
 
         data.timestamp = Date.now();
         data.distance = evothings.eddystone.calculateAccuracy(data.txPower, data.rssi);
+        data.voucherBeacon = this.isVoucherBeacon(data) && this.isInReach(data);
+         data.paintingBeacon = this.isPaintingBeacon(data) && this.isInReach(data);
         this.beaconData[data.address] = data;
 
         this.changeDetector.detectChanges();
@@ -71,10 +74,22 @@ export class HomePage {
     });
   }
 
-  stopScanningForBeacons() {
+  stopScanningForBeacons(): void {
     this.scanningInProgress = false;
     evothings.eddystone.stopScan();
     this.beaconData = new Map();
+  }
+
+  isVoucherBeacon(data): boolean {
+    return data.address.startsWith('A9067');
+  }
+
+  isPaintingBeacon(data): boolean {
+    return data.address.startsWith('92D4D');
+  }
+
+  isInReach(data): boolean {
+    return data.distance < 2;
   }
 
   uint8ArrayToString(uint8Array) {
@@ -88,6 +103,10 @@ export class HomePage {
       result += format(uint8Array[i]) + ' ';
     }
     return result;
+  }
+
+  showPaintingInfo() {
+    const browser = this.iab.create('https://en.wikipedia.org/wiki/Philosopher_in_Meditation');
   }
 
   ngOnDestroy() {

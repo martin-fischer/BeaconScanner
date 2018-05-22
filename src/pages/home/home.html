@@ -14,7 +14,11 @@
     <b>Beacon Address</b>: {{beacon.address}}<br>
     <b>Timestamp</b>: {{beacon.timestamp}}<br/>
     <b>Distance</b>: {{beacon.distance}}<br/><br/>
+    <button ion-button full *ngIf="beacon.voucherBeacon" (click)="showVoucher()">Gutschein anzeigen</button>
+    <button ion-button full *ngIf="beacon.paintingBeacon" (click)="showPaintingInfo()">Gemäldeinfos</button>
   </div>
+
+
 
 </ion-content>
 
