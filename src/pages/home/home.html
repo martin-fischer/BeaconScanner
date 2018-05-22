@@ -1,14 +1,19 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      My Beacon List
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <button ion-button (click)="startScanningForBeacons()">Scan</button>
+
+  <div *ngFor="let beacon of getBeaconList()">
+    {{beacon.timestamp}}<br/>
+    {{beacon.distance}}<br/>
+    {{beacon.address}}
+  </div>
+
 </ion-content>
+
