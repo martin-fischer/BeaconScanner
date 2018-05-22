@@ -10,14 +10,41 @@
   <button ion-button (click)="startScanningForBeacons()" [disabled]="scanningInProgress">Start Scan</button>
   <button ion-button (click)="stopScanningForBeacons()" [disabled]="!scanningInProgress">Stop Scan</button>
 
-  <div *ngFor="let beacon of getBeaconList()">
-    <b>Beacon Instance</b>: {{beacon.instanceId}}<br>
+  <ion-list *ngFor="let beacon of getBeaconList()">
+
+
+
+    <ion-item *ngIf="beacon.voucherBeacon">
+      <ion-thumbnail item-start>
+        <img src="assets/imgs/ice.jpg">
+      </ion-thumbnail>
+      <h2>Gutschein</h2>
+      <p>Gratisglace vom SV</p>
+      <button ion-button clear item-end (click)="showVoucher()">Anzeigen</button>
+    </ion-item>
+
+    <ion-item *ngIf="beacon.paintingBeacon">
+      <ion-thumbnail item-start>
+        <img src="assets/imgs/blueberry.jpg">
+      </ion-thumbnail>
+      <h2>Gemälde Noname</h2>
+      <p>Höre die Geschichte zu diesem Gemälde</p>
+      <button ion-button clear item-end (click)="showPaintingInfo()">Hören</button>
+    </ion-item>
+
+
+  </ion-list>
+
+
+
+    <!--<b>Beacon Instance</b>: {{beacon.instanceId}}<br>
     <b>Beacon Address</b>: {{beacon.address}}<br>
     <b>Timestamp</b>: {{beacon.timestamp}}<br/>
     <b>Distance</b>: {{beacon.distance}}<br/><br/>
     <button ion-button full *ngIf="beacon.voucherBeacon" (click)="showVoucher()">Gutschein anzeigen</button>
     <button ion-button full *ngIf="beacon.paintingBeacon" (click)="showPaintingInfo()">Gemäldeinfos</button>
-  </div>
+    -->
+
 
 
 
