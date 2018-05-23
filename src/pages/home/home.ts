@@ -1,9 +1,8 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
+import {Component} from '@angular/core';
+import {InAppBrowser} from '@ionic-native/in-app-browser';
 import {NativeAudio} from "@ionic-native/native-audio";
 import {Platform} from 'ionic-angular';
 import {Subscription} from "rxjs/Subscription";
-import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { AlertController } from 'ionic-angular';
 
 declare var evothings: any;
 declare var cordova: any;
@@ -23,13 +22,12 @@ export class HomePage {
   private onResumeSubscription: Subscription;
   private onPauseSubscription: Subscription;
 
-  private timer: number;
   scanningInProgress: boolean = false;
   isInForeground: boolean = true;
   playingInProgress: boolean = false;
 
 
-  constructor(private platform: Platform, private changeDetector: ChangeDetectorRef, private iab: InAppBrowser, private nativeAudio: NativeAudio, private alertCtrl: AlertController) {
+  constructor(private platform: Platform, private iab: InAppBrowser, private nativeAudio: NativeAudio) {
     this.onResumeSubscription = platform.resume.subscribe(() => {
       // do something meaningful when the app is put in the foreground
       this.isInForeground = true;
@@ -44,7 +42,7 @@ export class HomePage {
   ionViewWillEnter():void {
     this.startScanningForBeacons();
     // Timer that refreshes the beacon list.
-     this.timer = setInterval(this.getBeaconList, 2000);
+     setInterval(this.getBeaconList, 2000);
   }
 
   getBeaconList() {
