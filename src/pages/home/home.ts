@@ -23,6 +23,7 @@ export class HomePage {
 
   private scanningInProgress: boolean = false;
   private isInForeground: boolean = true;
+  private timer: number;
 
 
   constructor(private platform: Platform, private changeDetector: ChangeDetectorRef, private iab: InAppBrowser) {
@@ -37,6 +38,11 @@ export class HomePage {
     });
   }
 
+  ionViewWillEnter():void {
+    this.startScanningForBeacons();
+    // Timer that refreshes the beacon list.
+     this.timer = setInterval(this.getBeaconList, 1000);
+  }
 
   getBeaconList() {
     let beacons = this.beaconData;
@@ -73,7 +79,7 @@ export class HomePage {
         data.paintingBeacon = this.isPaintingBeacon(data) && this.isInReach(data);
         this.beaconData[data.address] = data;
 
-        this.changeDetector.detectChanges();
+        // this.changeDetector.detectChanges();
       })
     });
   }
