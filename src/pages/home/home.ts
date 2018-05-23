@@ -1,7 +1,9 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
+import {NativeAudio} from "@ionic-native/native-audio";
 import {Platform} from 'ionic-angular';
 import {Subscription} from "rxjs/Subscription";
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { AlertController } from 'ionic-angular';
 
 declare var evothings: any;
 declare var cordova: any;
@@ -21,12 +23,13 @@ export class HomePage {
   private onResumeSubscription: Subscription;
   private onPauseSubscription: Subscription;
 
-  private scanningInProgress: boolean = false;
-  private isInForeground: boolean = true;
   private timer: number;
+  scanningInProgress: boolean = false;
+  isInForeground: boolean = true;
+  playingInProgress: boolean = false;
 
 
-  constructor(private platform: Platform, private changeDetector: ChangeDetectorRef, private iab: InAppBrowser) {
+  constructor(private platform: Platform, private changeDetector: ChangeDetectorRef, private iab: InAppBrowser, private nativeAudio: NativeAudio, private alertCtrl: AlertController) {
     this.onResumeSubscription = platform.resume.subscribe(() => {
       // do something meaningful when the app is put in the foreground
       this.isInForeground = true;
@@ -41,7 +44,7 @@ export class HomePage {
   ionViewWillEnter():void {
     this.startScanningForBeacons();
     // Timer that refreshes the beacon list.
-     this.timer = setInterval(this.getBeaconList, 1000);
+     this.timer = setInterval(this.getBeaconList, 2000);
   }
 
   getBeaconList() {
@@ -115,8 +118,24 @@ export class HomePage {
     return result.trim();
   }
 
-  showPaintingInfo() {
-    const browser = this.iab.create('https://en.wikipedia.org/wiki/Philosopher_in_Meditation');
+  showPaintingInfo(): void {
+    this.iab.create('https://en.wikipedia.org/wiki/Philosopher_in_Meditation');
+  }
+
+  playPaintingInfo(): void {
+    this.nativeAudio.preloadComplex('rembrandt', 'assets/sounds/Rembrandt_Selbstbildnis_als_der_verlorene_ Sohn_im_Wirtshaus.mp3', 1, 1, 0).then(() => {
+      this.nativeAudio.play('rembrandt').then(() => {
+        this.playingInProgress = true;
+      }, (error) => {
+        this.playingInProgress = false;
+      });
+    }, (error) => {
+      this.playingInProgress = false;
+    });
+  }
+
+  stopPaintingInfo() {
+    this.nativeAudio.stop('rembrandt').then(() => {}, () => {});
   }
 
   ngOnDestroy() {

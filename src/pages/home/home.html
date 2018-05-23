@@ -29,7 +29,9 @@
       </ion-thumbnail>
       <h2>Gemälde Noname</h2>
       <p>Höre die Geschichte zu diesem Gemälde</p>
-      <button ion-button clear item-end (click)="showPaintingInfo()">Hören</button>
+      <button ion-button clear item-end (click)="showPaintingInfo()">Lesen</button>
+      <button ion-button clear item-end (click)="playPaintingInfo()" *ngIf="!playingInProgress"><ion-icon name="play"></ion-icon></button>
+      <button ion-button clear item-end (click)="stopPaintingInfo()" *ngIf="playingInProgress"><ion-icon name="square"></ion-icon></button>
     </ion-item>
 
 
